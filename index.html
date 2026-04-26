@@ -291,7 +291,6 @@
 <script>
   let curPlan = null;
   const prices = {a:799, b:3000, c:599};
-  const names  = {a:'個人報名', b:'四人團報', c:'不含辦桌'};
 
   function selPlan(p) {
     curPlan = p;
@@ -319,7 +318,7 @@
     document.getElementById('pd').textContent = 'NT$ ' + t.toLocaleString() + ' 元';
   }
 
-  async function doSubmit() {
+  function doSubmit() {
     const name  = document.getElementById('name').value.trim();
     const phone = document.getElementById('phone').value.trim();
     const ppl   = document.getElementById('ppl').value;
@@ -333,56 +332,49 @@
     msg.className = 'msg-box';
     msg.textContent = '';
 
+    // 必填檢查
     if (!name || !phone || !ppl || !plan || !email || !xfer) {
       msg.className = 'msg-box error';
-      msg.textContent = '❌ 請完整填寫所有必填欄位（姓名、電話、人數、方案、Email、匯款後五碼）';
-      return;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      msg.className = 'msg-box error';
-      msg.textContent = '❌ Email 格式不正確，請重新確認';
-      return;
-    }
-    if (xfer.length !== 5 || !/^\d+$/.test(xfer)) {
-      msg.className = 'msg-box error';
-      msg.textContent = '❌ 匯款後五碼請輸入 5 位數字';
+      msg.textContent = '❌ 請填寫所有必填欄位。';
       return;
     }
 
     const n = parseInt(ppl) || 1;
     const amount = plan === 'b' ? prices[plan] : prices[plan] * n;
 
+    // 鎖定按鈕
     btn.disabled = true;
     btn.textContent = '送出中…';
 
-    // --- 從這裡開始替換 ---
     try {
       const params = new URLSearchParams({ name, phone, people: ppl, plan, amount, email, transfer: xfer, note });
       
-      // 使用 fetch 發送資料，no-cors 模式不會因為跨網域安全檢查而報錯
-      fetch(SCRIPT_URL + '?' + params.toString(), {
-        method: 'GET',
-        mode: 'no-cors'
-      });
+      // 使用 iframe 暴力發送，避開 CORS
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = SCRIPT_URL + '?' + params.toString();
+      document.body.appendChild(iframe);
 
-      // 直接設定 1.5 秒後顯示成功，不等待 Google 的回應
+      // 強制成功跳轉
       setTimeout(() => {
         msg.className = 'msg-box success';
-        msg.innerHTML = '✅ 報名成功！<br>資料已寫入系統，請記得完成匯款並檢查信箱。';
-        form.reset();
+        msg.innerHTML = '✅ 報名資料已送出！<br>請於三日內完成匯款，並檢查您的 Email 或試算表。';
+        document.querySelector('form') ? document.querySelector('form').reset() : null; // 安全重置
+        
         btn.disabled = false;
         btn.textContent = '確認送出報名 →';
         window.scrollTo({ top: msg.offsetTop - 100, behavior: 'smooth' });
-      }, 1500);
+        
+        if (iframe.parentNode) document.body.removeChild(iframe);
+      }, 2500);
 
     } catch (e) {
-      console.error(e);
       msg.className = 'msg-box error';
       msg.textContent = '❌ 送出失敗，請聯繫主辦單位。';
       btn.disabled = false;
       btn.textContent = '確認送出報名 →';
     }
-    // --- 替換到這裡結束 ---
+  }
 </script>
 </body>
 </html>
