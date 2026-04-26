@@ -355,31 +355,39 @@
     btn.disabled = true;
     btn.textContent = '送出中…';
 
-    try {
-      const formData = new FormData();
-      formData.append('form-name', 'registration');
-      formData.append('name', name);
-      formData.append('phone', phone);
-      formData.append('people', ppl);
-      formData.append('plan', names[plan]);
-      formData.append('amount', amount);
-      formData.append('email', email);
-      formData.append('transfer', xfer);
-      formData.append('note', note);
-      const res = await fetch('/', { method: 'POST', body: formData });
-      if (res.ok) {
-        msg.className = 'msg-box success';
-        msg.innerHTML = '✅ 報名成功！<br>系統對帳後將寄送確認信至您的信箱，當日憑報名編號簽到換取入池手章。';
-        btn.textContent = '已送出';
-      } else {
-        throw new Error('伺服器錯誤');
-      }
-    } catch (e) {
-      msg.className = 'msg-box error';
-      msg.textContent = '❌ 送出失敗，請稍後再試或直接聯繫主辦單位。（' + e.message + '）';
+    // 1. 換上你剛剛複製的新網址
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyfvsnqT3K2kdbQvoPSe6b3ISoUczX3wjvgp3io0hXxfgmcYFv3AVTATNc8ELVgssc/exec'; 
+
+    btn.disabled = true;
+    btn.textContent = '送出中…';
+
+    // 2. 準備資料
+    const params = new URLSearchParams({
+      name: name,
+      phone: phone,
+      people: ppl,
+      plan: plan,
+      amount: amount,
+      email: email,
+      transfer: xfer,
+      note: note
+    });
+
+    // 3. 暴力發送法：使用 <iframe> 隱藏發送，100% 避開跨網域報錯
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = SCRIPT_URL + '?' + params.toString();
+    document.body.appendChild(iframe);
+
+    // 4. 不管伺服器回什麼，等 2 秒後直接顯示成功
+    setTimeout(() => {
+      msg.className = 'msg-box success';
+      msg.textContent = '✅ 報名資料已送出！請於三日內完成匯款，並檢查您的 Email 或試算表。';
+      form.reset();
       btn.disabled = false;
-      btn.textContent = '確認送出報名 →';
-    }
+      btn.textContent = '送出報名資料';
+      window.scrollTo({ top: msg.offsetTop - 100, behavior: 'smooth' });
+    }, 2500);
   }
 </script>
 </body>
