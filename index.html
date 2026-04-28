@@ -11,39 +11,59 @@
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:'Noto Sans TC',sans-serif;background:#f7f5f0;color:#222}
     /* 1. 設定外框：確保寬度 100% 且不超出螢幕 */
+/* 外框：讓照片組水平排列 */
 .photo-group {
-    display: grid;
-    grid-template-columns: 2fr 1fr; /* 電腦版：左 2 右 1 */
-    grid-template-rows: 180px 180px; /* 固定每橫列高度，解決高度不一問題 */
-    gap: 8px;
-    margin: 15px 0;
+    display: flex;
+    gap: 10px;
     width: 100%;
+    height: 400px; /* 電腦版固定總高度 */
+    margin: 20px 0;
 }
 
-/* 2. 設定圖片：強制填滿格子且不變形 */
-.photo-group img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* 這行最關鍵，會自動裁切圖片以符合格子 */
-    border-radius: 12px;
-    display: block;
-}
-
-/* 3. 讓第一張圖（左一）跨越兩行 */
+/* 左邊的大圖區 */
 .photo-group img:nth-child(1) {
-    grid-row: span 2;
+    flex: 2; /* 佔據 2 份寬度 */
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
 }
 
-/* 4. 手機版優化：螢幕寬度小於 600px 時自動調整 */
+/* 右邊的小圖容器 (我們用 CSS 模擬一個容器) */
+.photo-group::after {
+    content: "";
+    display: none; /* 這裡只是標記，實際靠下方選擇器 */
+}
+
+/* 右邊兩張小圖的排列：我們直接針對第 2, 3 張處理 */
+.right-photos-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* 佔據 1 份寬度 */
+    gap: 10px;
+}
+
+.right-photos-container img {
+    width: 100%;
+    height: calc(50% - 5px); /* 平分高度並扣除間隙 */
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+/* 手機版：自動切換為垂直排列 */
 @media (max-width: 600px) {
     .photo-group {
-        grid-template-columns: 1fr 1fr; /* 手機版改為兩欄平均分 */
-        grid-template-rows: 250px 120px; /* 調整高度比例 */
+        flex-direction: column;
+        height: auto; /* 手機版高度隨內容撐開 */
     }
-    
     .photo-group img:nth-child(1) {
-        grid-column: span 2; /* 第一張圖變大橫幅佔滿上方 */
-        grid-row: span 1;    /* 取消跨行，改為佔據第一列 */
+        height: 250px; /* 手機版第一張圖的高度 */
+    }
+    .right-photos-container {
+        flex-direction: row; /* 手機版下面兩張並排 */
+        height: 120px;
+    }
+    .right-photos-container img {
+        height: 100%;
     }
 }
 
@@ -184,10 +204,13 @@
   <!-- GALLERY -->
   <div class="section">
    <div class="photo-group">
-    <div class="photo-group">
     <img src="https://drive.google.com/thumbnail?sz=w1000&id=1dja2vBC-d1Wwr5eI4DO-syconZBBB9nn" alt="活動花絮">
-    <img src="https://drive.google.com/thumbnail?sz=w1000&id=1PjHEOfTuo71b8gyAUI-bMyrUeJ_klP6w" alt="活動花絮">
-    <img src="https://drive.google.com/thumbnail?sz=w1000&id=13xCQWbQZKePn3Mviy_L3JT5TfLlsRWDu" alt="活動花絮">
+
+    <div class="right-photos-container">
+        <img src="https://drive.google.com/thumbnail?sz=w1000&id=1PjHEOfTuo71b8gyAUI-bMyrUeJ_klP6w" alt="活動花絮">
+        <img src="https://drive.google.com/thumbnail?sz=w1000&id=13xCQWbQZKePn3Mviy_L3JT5TfLlsRWDu" alt="活動花絮">
+    </div>
+</div>
 </div>
     </div>
 
