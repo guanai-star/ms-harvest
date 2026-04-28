@@ -103,6 +103,54 @@
       .photorow{grid-template-columns:repeat(2,1fr)}
       .gallery{grid-template-rows:130px 110px}
     }
+   .schedule-section {
+    padding: 40px 20px;
+    background-color: #f9f9f9; /* 淺灰色背景，與亮點區塊做區隔 */
+    border-radius: 20px;
+    margin: 20px 0;
+}
+
+.schedule-container {
+    max-width: 800px;
+    margin: 0 auto;
+    overflow-x: auto; /* 防止手機版破版 */
+}
+
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.schedule-table th, .schedule-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.schedule-table th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+.schedule-table .time {
+    color: #007bff;
+    font-weight: bold;
+    white-space: nowrap; /* 確保時間不換行 */
+    width: 30%;
+}
+
+/* 手機版微調 */
+@media (max-width: 600px) {
+    .schedule-table th, .schedule-table td {
+        padding: 12px 10px;
+        font-size: 14px;
+    }
+}
   </style>
 </head>
 <body>
@@ -163,11 +211,46 @@
 
     <div class="section-title">🦀 三大活動亮點</div>
     <div class="features">
-      <div class="fc"><span class="fi">🏆</span><h3>蛤蜊無限量採收</h3><p>下池體驗現挖文蛤參加獎再送每人一包 300g 大文蛤</p></div>
-      <div class="fc"><span class="fi">🧩</span><h3>食漁教育學習</h3><p>結合趣味競賽與食漁知識內容，刺激親子合作，寓教於樂</p></div>
-      <div class="fc"><span class="fi">🍽️</span><h3>蛤蜊辦桌饗宴</h3><p>傳統辦桌文化結合東石在地海味，邊吃邊玩邊認識東石蛤</p></div>
+      <div class="fc"><span class="fi">🏆</span><h3>蛤蜊無限採收</h3><p>下池挖蛤各憑本事<p>參加獎再送每人一包 300g 大文蛤</p></div>
+      <div class="fc"><span class="fi">🧩</span><h3>食漁教育學習</h3><p>結合趣味競賽與食漁知識內容<p>刺激親子合作，寓教於樂</p></div>
+      <div class="fc"><span class="fi">🍽️</span><h3>蛤蜊辦桌饗宴</h3><p>傳統辦桌文化結合東石在地海味<p>邊吃邊玩保證值回票價</p></div>
     </div>
-
+<section class="schedule-section">
+    <h2 class="section-title">🕒 活動流程</h2>
+    <div class="schedule-container">
+        <table class="schedule-table">
+            <thead>
+                <tr>
+                    <th>時間</th>
+                    <th>活動內容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="time">15:00 - 15:15</td>
+                    <td>活動報到</td>
+                </tr>
+                <tr>
+                    <td class="time">15:15 - 15:40</td>
+                    <td>認識東石文蛤與安全解說</td>
+                </tr>
+                <tr>
+                    <td class="time">15:40 - 17:00</td>
+                    <td>下池摸蛤體驗與蛤蛤挑戰賽</td>
+                </tr>
+                <tr>
+                    <td class="time">17:00 - 18:00</td>
+                    <td>吐沙教學與身體清潔</td>
+                </tr>
+                <tr>
+                    <td class="time">18:00 - 20:00</td>
+                    <td>蛤蠣文化辦桌饗宴</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+    
     <div class="photorow">
       <div><img src="https://drive.google.com/thumbnail?id=1xcspJWDuqTKuXXEwRDnAF6zlyoFZZzWo&sz=w300" alt=""></div>
       <div><img src="https://drive.google.com/thumbnail?id=1dhYfsc_a0p47jE1MpW4a5qeFwfDLEHih&sz=w300" alt=""></div>
